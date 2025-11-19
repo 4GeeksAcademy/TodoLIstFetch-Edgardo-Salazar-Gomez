@@ -25,9 +25,27 @@ export const TodoListFetch = () => {
     
   }
 
-  const handelDelete = () => {
+  const handelDelete = async (id) => {
+    const uri = `${baseURL}/todos/${id}`
+    const options ={
+      method:'DELETE'
+    };
     console.log('clinck en delete');
-  }
+    const response = await fetch(uri, options);
+    if (!response.ok){
+      console.log("Error eliminado", response.status);
+      return;      
+    }
+    getTodos();
+  };
+
+  const handleCancel = () => {
+  setIsEdit(false);
+  setEditTodo({});
+  setEditTask('');
+  setEditCompleted(false);
+};
+  
 
 const handelSubmitAdd = async (event) => {
   event.preventDefault()
@@ -133,7 +151,7 @@ if(!response.ok) {
             <label className="form-check-label" htmlFor="exampleCheck1">Completed</label>
           </div>
           <button type="submit" className="btn btn-primary me-2">Submit</button>
-          <button type="reset" className="btn btn-secondary">Cancel</button>
+          <button type="reset" className="btn btn-secondary" onClick={handleCancel}>Cancel</button>
         </form>
 
         :
@@ -169,7 +187,7 @@ if(!response.ok) {
                 <i className="fas fa-edit text-primary me-2"></i>
               </span>
 
-              <span onClick={handelDelete}>
+              <span onClick={() => handelDelete(item.id)}>
                 <i className="fas fa-trash text-danger"></i>
               </span>
             </div>
